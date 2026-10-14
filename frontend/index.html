@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ripple — a small place to think out loud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ===================== AUTH SCREEN ===================== -->
+<section id="view-auth" class="view auth-view">
+  <div class="auth-card">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <span class="ring ring-1"></span><span class="ring ring-2"></span><span class="dot"></span>
+      </span>
+      <h1>Ripple</h1>
+    </div>
+    <p class="brand-tagline">A small place to think out loud. What you post moves outward, one ring at a time.</p>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login">Log in</button>
+      <button class="auth-tab" data-tab="register">Sign up</button>
+    </div>
+
+    <form id="form-login" class="auth-form">
+      <label>Username or email
+        <input type="text" name="identifier" required autocomplete="username" />
+      </label>
+      <label>Password
+        <input type="password" name="password" required autocomplete="current-password" />
+      </label>
+      <p class="form-error" id="login-error"></p>
+      <button type="submit" class="btn btn-primary">Log in</button>
+      <p class="auth-hint">Demo account: <strong>aria</strong> / <strong>password123</strong></p>
+    </form>
+
+    <form id="form-register" class="auth-form hidden">
+      <label>Display name
+        <input type="text" name="display_name" placeholder="e.g. Aria Chen" />
+      </label>
+      <label>Username
+        <input type="text" name="username" required minlength="3" maxlength="30" autocomplete="username" />
+      </label>
+      <label>Email
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <label>Password
+        <input type="password" name="password" required minlength="6" autocomplete="new-password" />
+      </label>
+      <p class="form-error" id="register-error"></p>
+      <button type="submit" class="btn btn-primary">Create account</button>
+    </form>
+  </div>
+</section>
+
+<!-- ===================== APP SHELL ===================== -->
+<div id="view-app" class="app-shell hidden">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="brand brand-sm">
+      <span class="brand-mark" aria-hidden="true">
+        <span class="ring ring-1"></span><span class="ring ring-2"></span><span class="dot"></span>
+      </span>
+      <span class="brand-name">Ripple</span>
+    </div>
+
+    <ul class="nav-links">
+      <li><button class="nav-link active" data-route="feed" data-feed="all" aria-label="Home" title="Home">
+        <svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
+        <span>Home</span>
+      </button></li>
+      <li><button class="nav-link" data-route="feed" data-feed="following">
+        <svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 20c0-3.3 3.6-6 8-6s8 2.7 8 6"/></svg>
+        <span>Following</span>
+      </button></li>
+      <li><button class="nav-link" data-route="reels" aria-label="Reels" title="Reels">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4l4 6m1-6 4 6M10 11l5 3-5 3z"/></svg>
+        <span>Reels</span>
+      </button></li>
+      <li><button class="nav-link" data-route="search" title="Find people" aria-label="Find people">
+        <svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+        <span>Find people</span>
+      </button></li>
+      <li><button class="nav-link" data-route="profile" id="nav-my-profile">
+        <svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 100 10 5 5 0 000-10zM3 21c1-4.5 5-7 9-7s8 2.5 9 7"/></svg>
+        <span>My profile</span>
+      </button></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="mini-profile" id="mini-profile"></div>
+      <button id="btn-logout" class="btn btn-ghost btn-small">Log out</button>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main-col">
+
+    <!-- Feed view -->
+    <section id="view-feed" class="view">
+      <header class="col-header">
+        <h2 id="feed-title">Home</h2>
+      </header>
+
+      <form id="form-new-post" class="composer">
+        <textarea name="content" maxlength="500" placeholder="What's rippling through your mind?" rows="3"></textarea>
+        <div id="media-preview" class="media-preview hidden"></div>
+        <input id="post-media-input" class="hidden" type="file" accept="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm" />
+        <div class="composer-row">
+          <div class="composer-tools">
+            <label class="media-picker" for="post-media-input" title="Add photo or video" aria-label="Add photo or video">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg>
+            </label>
+            <span class="char-count"><span id="char-count-val">0</span>/500</span>
+          </div>
+          <button type="submit" class="btn btn-primary btn-small">Post</button>
+        </div>
+      </form>
+
+      <div id="feed-list" class="post-list"></div>
+      <p id="feed-empty" class="empty-state hidden">No posts here yet. Be the first to make a ripple.</p>
+    </section>
+
+    <!-- Reels view -->
+    <section id="view-reels" class="view reels-view hidden">
+      <header class="col-header">
+        <h2>Reels</h2>
+      </header>
+      <div id="reels-list" class="reels-list"></div>
+      <p id="reels-empty" class="empty-state hidden">No reels yet. Share a video post to add one.</p>
+    </section>
+
+    <!-- People search view -->
+    <section id="view-search" class="view hidden">
+      <header class="col-header">
+        <h2>Find people</h2>
+      </header>
+      <form id="people-search-form" class="people-search-form" role="search">
+        <input id="people-search-input" type="search" name="query" minlength="2" maxlength="80" autocomplete="off" placeholder="Search by name or username" aria-label="Search by name or username" />
+        <button type="submit" class="btn btn-primary btn-small">Search</button>
+      </form>
+      <p id="people-search-status" class="empty-state">Enter at least 2 characters to search.</p>
+      <div id="people-search-results" class="people-list"></div>
+    </section>
+
+    <!-- Profile view -->
+    <section id="view-profile" class="view hidden">
+      <div class="profile-header" id="profile-header"></div>
+
+      <div class="profile-tabs">
+        <button class="profile-tab active" data-ptab="posts">Posts</button>
+        <button class="profile-tab" data-ptab="followers">Followers</button>
+        <button class="profile-tab" data-ptab="following">Following</button>
+      </div>
+
+      <div id="profile-posts" class="post-list"></div>
+      <div id="profile-followers" class="people-list hidden"></div>
+      <div id="profile-following" class="people-list hidden"></div>
+    </section>
+
+    <!-- Post detail view -->
+    <section id="view-post" class="view hidden">
+      <button class="btn btn-ghost btn-small back-btn" id="btn-back-to-feed">&larr; Back</button>
+      <div id="post-detail-card"></div>
+
+      <div class="thread-rail">
+        <h3>Comments</h3>
+        <form id="form-new-comment" class="composer composer-comment">
+          <textarea name="content" maxlength="300" placeholder="Add to the ripple..." rows="2"></textarea>
+          <div class="composer-row">
+            <span class="char-count"><span id="comment-char-count-val">0</span>/300</span>
+            <button type="submit" class="btn btn-primary btn-small">Reply</button>
+          </div>
+        </form>
+        <div id="comment-list" class="comment-list"></div>
+      </div>
+    </section>
+
+    <!-- Edit profile modal -->
+    <div id="modal-edit-profile" class="modal hidden">
+      <div class="modal-card">
+        <h3>Edit profile</h3>
+        <form id="form-edit-profile">
+          <label>Display name
+            <input type="text" name="display_name" maxlength="60" />
+          </label>
+          <label>Bio
+            <textarea name="bio" maxlength="280" rows="3"></textarea>
+          </label>
+          <label>Avatar URL
+            <input type="url" name="avatar_url" placeholder="https://..." />
+          </label>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" id="btn-cancel-edit">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
