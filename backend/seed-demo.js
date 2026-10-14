@@ -9,6 +9,12 @@ const demoReelVideoUrls = [
   'https://media.w3.org/2010/05/sintel/trailer.mp4',
   'https://media.w3.org/2010/05/bunny/trailer.mp4',
   'https://media.w3.org/2010/05/video/movie_300.mp4',
+  'https://samplelib.com/mp4/sample-5s.mp4',
+  'https://samplelib.com/vertical/sample-vertical-5s.mp4',
+  'https://videos.pexels.com/video-files/3141208/3141208-hd_1920_1080_25fps.mp4',
+  'https://videos.pexels.com/video-files/3015510/3015510-hd_1920_1080_24fps.mp4',
+  'https://videos.pexels.com/video-files/857042/857042-hd_1920_1080_30fps.mp4',
+  'https://videos.pexels.com/video-files/6338336/6338336-sd_640_360_24fps.mp4',
 ];
 const reelProfiles = new Map([[2, 0], [13, 1], [18, 2]]);
 const photos = [
@@ -83,7 +89,7 @@ async function seedDemo() {
       const user = demoUsers[index];
       const reelSourceIndex = reelProfiles.get(index);
       const mediaUrl = reelSourceIndex !== undefined
-        ? `${demoReelVideoUrls[reelSourceIndex]}#t=${reelSourceIndex * 8}`
+        ? demoReelVideoUrls[reelSourceIndex]
         : [0, 1, 3, 4, 6, 7, 9, 11, 15, 17].includes(index)
           ? photos[index % photos.length]
           : null;
@@ -113,11 +119,11 @@ async function seedDemo() {
         defaults: {
           user_id: user.id,
           content,
-          image_url: `${demoReelVideoUrls[(index + 3) % demoReelVideoUrls.length]}#t=${(index + 2) * 5}`,
+          image_url: demoReelVideoUrls[(index + 3) % demoReelVideoUrls.length],
         },
         transaction,
       });
-      const videoUrl = `${demoReelVideoUrls[(index + 3) % demoReelVideoUrls.length]}#t=${(index + 2) * 5}`;
+      const videoUrl = demoReelVideoUrls[(index + 3) % demoReelVideoUrls.length];
       if (post.image_url !== videoUrl) {
         post.image_url = videoUrl;
         await post.save({ transaction });

@@ -85,9 +85,7 @@ router.get('/', optionalAuth, async (req, res) => {
 
     if (req.query.feed === 'following' && req.userId) {
       const follows = await Follow.findAll({ where: { follower_id: req.userId } });
-      const ids = follows.map((f) => f.following_id);
-      ids.push(req.userId); // include your own posts in your following feed
-      where.user_id = ids;
+      where.user_id = follows.map((follow) => follow.following_id);
     }
 
     const posts = await Post.findAll({

@@ -130,7 +130,9 @@ async function enterApp() {
   el('#view-auth').classList.add('hidden');
   el('#view-app').classList.remove('hidden');
   renderMiniProfile();
-  await navigate('feed', { feed: 'all' });
+  const sharedPost = window.location.hash.match(/^#post=(\d+)$/);
+  if (sharedPost) await navigate('post', { postId: Number(sharedPost[1]) });
+  else await navigate('feed', { feed: 'all' });
 }
 
 /* ------------------------------------------------------------
@@ -260,12 +262,16 @@ function renderReelCard(reel) {
         <svg viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4V4z"/></svg>
         <span>${reel.comment_count}</span>
       </button>
+      <button class="reel-action share-btn" aria-label="Share reel" title="Share reel">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.6 6.6-4.2m-6.6 7 6.6 4.2"/></svg>
+      </button>
       ${isOwn ? '<button class="reel-action reel-delete delete-btn" aria-label="Delete reel"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>' : ''}
     </div>
   `;
 
   el('.like-btn', card).addEventListener('click', (event) => toggleLike(event, reel.id));
   el('.comment-btn', card).addEventListener('click', () => navigate('post', { postId: reel.id }));
+  el('.share-btn', card).addEventListener('click', (event) => sharePost(event, reel));
   el('.reel-author', card).addEventListener('click', () => {
     if (reel.author) navigate('profile', { userId: reel.author.id });
   });
@@ -304,6 +310,9 @@ function renderPostCard(post) {
           <svg viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4V4z"/></svg>
           <span>${post.comment_count}</span>
         </button>
+        <button class="action-btn share-btn" data-post-id="${post.id}" aria-label="Share post" title="Share post">
+          <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.7 10.6 6.6-4.2m-6.6 7 6.6 4.2"/></svg>
+        </button>
         ${isOwn ? `<button class="action-btn delete-btn" data-post-id="${post.id}">
           <svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>
         </button>` : ''}
@@ -319,6 +328,7 @@ function renderPostCard(post) {
 
   el('.like-btn', card).addEventListener('click', (e) => toggleLike(e, post.id));
   el('.comment-btn', card).addEventListener('click', () => navigate('post', { postId: post.id }));
+  el('.share-btn', card).addEventListener('click', (e) => sharePost(e, post));
   const delBtn = el('.delete-btn', card);
   if (delBtn) delBtn.addEventListener('click', (e) => handleDeletePost(e, post.id));
 
@@ -329,6 +339,33 @@ function renderPostCard(post) {
   });
 
   return card;
+}
+
+async function sharePost(event, post) {
+  event.stopPropagation();
+  const shareUrl = new URL('/', window.location.href);
+  shareUrl.hash = `post=${post.id}`;
+  const shareData = {
+    title: `Post by @${post.author ? post.author.username : 'Ripple'}`,
+    text: post.content || 'Check out this Ripple post.',
+    url: shareUrl.toString(),
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      return;
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(shareData.url);
+    toast('Post link copied.');
+  } catch (err) {
+    toast('Could not copy the post link.');
+  }
 }
 
 async function toggleLike(e, postId) {
