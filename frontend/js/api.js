@@ -66,6 +66,7 @@ const Api = {
   // Users
   getUser(id) { return this.get(`/users/${id}`); },
   searchUsers(query) { return this.get(`/users/search?q=${encodeURIComponent(query)}`); },
+  changePassword(id, payload) { return this.put(`/users/${id}/password`, payload); },
   updateUser(id, payload) { return this.put(`/users/${id}`, payload); },
   getUserPosts(id) { return this.get(`/users/${id}/posts`); },
   follow(id) { return this.post(`/users/${id}/follow`); },

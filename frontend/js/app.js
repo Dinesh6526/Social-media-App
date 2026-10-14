@@ -513,9 +513,10 @@ function renderProfileHeader(data) {
           <div class="profile-handle">@${escapeHtml(user.username)}</div>
         </div>
       </div>
-      <div>
+      <div class="profile-header-actions">
         ${is_self
-          ? `<button class="btn btn-ghost btn-small" id="btn-edit-profile">Edit profile</button>`
+          ? `<button class="btn btn-ghost btn-small" id="btn-edit-profile">Edit profile</button>
+             <button class="btn btn-ghost btn-small" id="btn-change-password">Change password</button>`
           : `<button class="btn btn-follow btn-small ${is_following ? 'is-following' : ''}" id="btn-follow-toggle">${is_following ? 'Following' : 'Follow'}</button>`
         }
       </div>
@@ -530,6 +531,7 @@ function renderProfileHeader(data) {
 
   if (is_self) {
     el('#btn-edit-profile').addEventListener('click', () => openEditProfile(user));
+    el('#btn-change-password').addEventListener('click', openChangePassword);
   } else {
     el('#btn-follow-toggle').addEventListener('click', (e) => toggleFollow(e, user.id));
   }
@@ -709,6 +711,14 @@ function openEditProfile(user) {
   el('#modal-edit-profile').classList.remove('hidden');
 }
 
+function openChangePassword() {
+  const form = el('#form-change-password');
+  form.reset();
+  el('#password-change-error').textContent = '';
+  el('#modal-change-password').classList.remove('hidden');
+  form.current_password.focus();
+}
+
 function initEditProfileModal() {
   el('#btn-cancel-edit').addEventListener('click', () => {
     el('#modal-edit-profile').classList.add('hidden');
@@ -729,6 +739,38 @@ function initEditProfileModal() {
       await loadProfile();
     } catch (err) {
       toast(err.message);
+    }
+  });
+
+  el('#btn-cancel-password').addEventListener('click', () => {
+    el('#modal-change-password').classList.add('hidden');
+    el('#form-change-password').reset();
+  });
+  el('#form-change-password').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const errorMessage = el('#password-change-error');
+    const submitButton = el('button[type="submit"]', form);
+    errorMessage.textContent = '';
+
+    if (form.new_password.value !== form.confirm_password.value) {
+      errorMessage.textContent = 'New passwords do not match.';
+      return;
+    }
+
+    submitButton.disabled = true;
+    try {
+      await Api.changePassword(state.user.id, {
+        current_password: form.current_password.value,
+        new_password: form.new_password.value,
+      });
+      form.reset();
+      el('#modal-change-password').classList.add('hidden');
+      toast('Password updated.');
+    } catch (err) {
+      errorMessage.textContent = err.message;
+    } finally {
+      submitButton.disabled = false;
     }
   });
 }

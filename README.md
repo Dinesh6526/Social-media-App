@@ -106,6 +106,19 @@ without dropping existing tables or data. The first non-demo account follows
 all 20 demo profiles by default. Set `DEMO_OWNER_USERNAME` to choose a different
 account. Demo profiles use password `ripple-demo-2026`.
 
+### Password changes and local recovery
+
+Signed-in users can change their password from their own profile. If the password
+is forgotten during local development, run this from `backend`:
+
+```bash
+npm run reset-password -- your-email@example.com
+```
+
+The command also accepts a username and prompts for the new password without
+echoing it. Public email reset links are not enabled because this project has no
+email delivery provider configured.
+
 ### 6. Run the server
 
 ```bash

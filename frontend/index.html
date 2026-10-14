@@ -204,6 +204,28 @@
       </div>
     </div>
 
+    <div id="modal-change-password" class="modal hidden">
+      <div class="modal-card">
+        <h3>Change password</h3>
+        <form id="form-change-password">
+          <label>Current password
+            <input type="password" name="current_password" required autocomplete="current-password" />
+          </label>
+          <label>New password
+            <input type="password" name="new_password" required minlength="8" autocomplete="new-password" />
+          </label>
+          <label>Confirm new password
+            <input type="password" name="confirm_password" required minlength="8" autocomplete="new-password" />
+          </label>
+          <p class="form-error" id="password-change-error" role="alert"></p>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" id="btn-cancel-password">Cancel</button>
+            <button type="submit" class="btn btn-primary">Update password</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </main>
 </div>
 

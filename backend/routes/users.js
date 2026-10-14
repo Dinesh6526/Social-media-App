@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
 const { User, Post, Follow, Like, Comment } = require('../models');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
@@ -103,6 +104,38 @@ router.put('/:id', requireAuth, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Could not update profile.' });
+  }
+});
+
+// PUT /api/users/:id/password - change the authenticated user's password
+router.put('/:id/password', requireAuth, async (req, res) => {
+  if (Number(req.params.id) !== req.userId) {
+    return res.status(403).json({ error: 'You can only change your own password.' });
+  }
+
+  const { current_password, new_password } = req.body;
+  if (typeof current_password !== 'string' || typeof new_password !== 'string') {
+    return res.status(400).json({ error: 'Current and new passwords are required.' });
+  }
+  if (new_password.length < 8) {
+    return res.status(400).json({ error: 'New password must be at least 8 characters.' });
+  }
+
+  try {
+    const user = await User.findByPk(req.userId);
+    if (!user) return res.status(404).json({ error: 'User not found.' });
+
+    const currentPasswordMatches = await bcrypt.compare(current_password, user.password_hash);
+    if (!currentPasswordMatches) {
+      return res.status(401).json({ error: 'Current password is incorrect.' });
+    }
+
+    user.password_hash = await bcrypt.hash(new_password, 10);
+    await user.save();
+    res.json({ password_changed: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Could not change password.' });
   }
 });
 

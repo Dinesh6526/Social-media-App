@@ -868,6 +868,13 @@ a {
   gap: 16px;
 }
 
+.profile-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .profile-identity {
   display: flex;
   gap: 16px;
