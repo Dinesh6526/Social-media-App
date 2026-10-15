@@ -16,7 +16,7 @@ const Follow = sequelize.define('Follow', {
     allowNull: false,
   },
 }, {
-  tableName: 'follows',
+  tableName: 'followers',
   timestamps: true,
   createdAt: 'created_at',
   updatedAt: false,
