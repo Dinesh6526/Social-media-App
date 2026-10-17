@@ -1,59 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ripple — a small place to think out loud</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ripple — a modern place to think out loud</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
+<!-- Ambient background glow elements -->
+<div class="ambient-glow glow-top" aria-hidden="true"></div>
+<div class="ambient-glow glow-bottom" aria-hidden="true"></div>
+
 <!-- ===================== AUTH SCREEN ===================== -->
 <section id="view-auth" class="view auth-view">
+  <div class="auth-ambient" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+  </div>
+
   <div class="auth-card">
-    <div class="brand">
-      <span class="brand-mark" aria-hidden="true">
-        <span class="ring ring-1"></span><span class="ring ring-2"></span><span class="dot"></span>
-      </span>
-      <h1>Ripple</h1>
+    <div class="auth-header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <span class="ring ring-1"></span>
+          <span class="ring ring-2"></span>
+          <span class="ring ring-3"></span>
+          <span class="dot"></span>
+        </span>
+        <h1 class="brand-title">Ripple</h1>
+      </div>
+      <p class="brand-tagline">A modern place to think out loud. What you post moves outward, one ring at a time.</p>
     </div>
-    <p class="brand-tagline">A small place to think out loud. What you post moves outward, one ring at a time.</p>
 
-    <div class="auth-tabs">
-      <button class="auth-tab active" data-tab="login">Log in</button>
-      <button class="auth-tab" data-tab="register">Sign up</button>
+    <div class="auth-tabs" role="tablist">
+      <button class="auth-tab active" data-tab="login" role="tab" aria-selected="true">
+        <span>Log in</span>
+      </button>
+      <button class="auth-tab" data-tab="register" role="tab" aria-selected="false">
+        <span>Sign up</span>
+      </button>
     </div>
 
+    <!-- Login Form -->
     <form id="form-login" class="auth-form">
-      <label>Username or email
-        <input type="text" name="identifier" required autocomplete="username" />
-      </label>
-      <label>Password
-        <input type="password" name="password" required autocomplete="current-password" />
-      </label>
-      <p class="form-error" id="login-error"></p>
-      <button type="submit" class="btn btn-primary">Log in</button>
-      <p class="auth-hint">Demo account: <strong>aria</strong> / <strong>password123</strong></p>
+      <div class="input-group">
+        <label for="login-identifier">Username or email</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input id="login-identifier" type="text" name="identifier" required autocomplete="username" placeholder="aria or aria@ripple.app" />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="login-password">Password</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input id="login-password" type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
+        </div>
+      </div>
+
+      <p class="form-error" id="login-error" role="alert"></p>
+
+      <button type="submit" class="btn btn-primary btn-block">
+        <span>Log in</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <!-- Quick Demo Account Fill Button -->
+      <div class="demo-box">
+        <div class="demo-info">
+          <span class="badge badge-accent">Demo Access</span>
+          <span class="demo-text"><strong>aria</strong> / <strong>password123</strong></span>
+        </div>
+        <button type="button" id="btn-quick-demo" class="btn btn-secondary btn-small" title="Auto-fill demo credentials">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span>Use Demo</span>
+        </button>
+      </div>
     </form>
 
+    <!-- Register Form -->
     <form id="form-register" class="auth-form hidden">
-      <label>Display name
-        <input type="text" name="display_name" placeholder="e.g. Aria Chen" />
-      </label>
-      <label>Username
-        <input type="text" name="username" required minlength="3" maxlength="30" autocomplete="username" />
-      </label>
-      <label>Email
-        <input type="email" name="email" required autocomplete="email" />
-      </label>
-      <label>Password
-        <input type="password" name="password" required minlength="6" autocomplete="new-password" />
-      </label>
-      <p class="form-error" id="register-error"></p>
-      <button type="submit" class="btn btn-primary">Create account</button>
+      <div class="input-group">
+        <label for="reg-display-name">Display name</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input id="reg-display-name" type="text" name="display_name" placeholder="e.g. Aria Chen" />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="reg-username">Username</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"/></svg>
+          <input id="reg-username" type="text" name="username" required minlength="3" maxlength="30" autocomplete="username" placeholder="ariachen" />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="reg-email">Email</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <input id="reg-email" type="email" name="email" required autocomplete="email" placeholder="aria@example.com" />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="reg-password">Password</label>
+        <div class="input-wrapper">
+          <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <input id="reg-password" type="password" name="password" required minlength="6" autocomplete="new-password" placeholder="At least 6 characters" />
+        </div>
+      </div>
+
+      <p class="form-error" id="register-error" role="alert"></p>
+
+      <button type="submit" class="btn btn-primary btn-block">
+        <span>Create account</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
     </form>
   </div>
 </section>
@@ -61,102 +131,193 @@
 <!-- ===================== APP SHELL ===================== -->
 <div id="view-app" class="app-shell hidden">
 
-  <!-- Sidebar -->
-  <nav class="sidebar">
-    <div class="brand brand-sm">
-      <span class="brand-mark" aria-hidden="true">
-        <span class="ring ring-1"></span><span class="ring ring-2"></span><span class="dot"></span>
-      </span>
-      <span class="brand-name">Ripple</span>
+  <!-- Left Sidebar Navigation -->
+  <nav class="sidebar" aria-label="Main Navigation">
+    <div class="sidebar-top">
+      <div class="brand brand-sm">
+        <span class="brand-mark" aria-hidden="true">
+          <span class="ring ring-1"></span>
+          <span class="ring ring-2"></span>
+          <span class="ring ring-3"></span>
+          <span class="dot"></span>
+        </span>
+        <span class="brand-name">Ripple</span>
+      </div>
+
+      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle light/dark theme" title="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
     </div>
 
     <ul class="nav-links">
-      <li><button class="nav-link active" data-route="feed" data-feed="all" aria-label="Home" title="Home">
-        <svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg>
-        <span>Home</span>
-      </button></li>
-      <li><button class="nav-link" data-route="feed" data-feed="following">
-        <svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zM4 20c0-3.3 3.6-6 8-6s8 2.7 8 6"/></svg>
-        <span>Following</span>
-      </button></li>
-      <li><button class="nav-link" data-route="reels" aria-label="Reels" title="Reels">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 4l4 6m1-6 4 6M10 11l5 3-5 3z"/></svg>
-        <span>Reels</span>
-      </button></li>
-      <li><button class="nav-link" data-route="search" title="Find people" aria-label="Find people">
-        <svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
-        <span>Find people</span>
-      </button></li>
-      <li><button class="nav-link" data-route="profile" id="nav-my-profile">
-        <svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 100 10 5 5 0 000-10zM3 21c1-4.5 5-7 9-7s8 2.5 9 7"/></svg>
-        <span>My profile</span>
-      </button></li>
+      <li>
+        <button class="nav-link active" data-route="feed" data-feed="all" aria-label="Home Feed" title="Home Feed">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-link" data-route="feed" data-feed="following" aria-label="Following Feed" title="Following Feed">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <span>Following</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-link" data-route="reels" aria-label="Reels" title="Watch Reels">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4"/><polygon points="10 8 16 12 10 16 10 8"/><line x1="2" y1="7" x2="22" y2="7"/></svg>
+          <span>Reels</span>
+          <span class="nav-badge">New</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-link" data-route="search" title="Find people" aria-label="Find people">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Find people</span>
+        </button>
+      </li>
+      <li>
+        <button class="nav-link" data-route="profile" id="nav-my-profile" aria-label="My Profile" title="My Profile">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>My profile</span>
+        </button>
+      </li>
     </ul>
 
     <div class="sidebar-footer">
-      <div class="mini-profile" id="mini-profile"></div>
-      <button id="btn-logout" class="btn btn-ghost btn-small">Log out</button>
+      <div class="mini-profile-card">
+        <div class="mini-profile" id="mini-profile"></div>
+        <button id="btn-logout" class="btn-logout" title="Log out" aria-label="Log out">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
     </div>
   </nav>
 
-  <!-- Main -->
+  <!-- Main Content Area -->
   <main class="main-col">
 
-    <!-- Feed view -->
+    <!-- Mobile Top Header Bar -->
+    <header class="mobile-header">
+      <div class="brand brand-sm">
+        <span class="brand-mark" aria-hidden="true">
+          <span class="ring ring-1"></span>
+          <span class="ring ring-2"></span>
+          <span class="dot"></span>
+        </span>
+        <span class="brand-name">Ripple</span>
+      </div>
+      <button id="theme-toggle-mobile" class="theme-toggle-btn" aria-label="Toggle theme">
+        <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </header>
+
+    <!-- 1. Feed View -->
     <section id="view-feed" class="view">
-      <header class="col-header">
-        <h2 id="feed-title">Home</h2>
+      <header class="col-header sticky-header">
+        <div class="header-content">
+          <h2 id="feed-title">Home</h2>
+          <div class="feed-tabs-header">
+            <button class="feed-tab-btn active" data-feed-switch="all">For You</button>
+            <button class="feed-tab-btn" data-feed-switch="following">Following</button>
+          </div>
+        </div>
       </header>
 
+      <!-- Composer Card -->
       <form id="form-new-post" class="composer">
-        <textarea name="content" maxlength="500" placeholder="What's rippling through your mind?" rows="3"></textarea>
-        <div id="media-preview" class="media-preview hidden"></div>
+        <div class="composer-body">
+          <div class="composer-avatar-slot" id="composer-avatar-slot">
+            <div class="avatar avatar-sm">✦</div>
+          </div>
+          <div class="composer-input-wrap">
+            <textarea name="content" maxlength="500" placeholder="What's rippling through your mind?" rows="3"></textarea>
+            <div id="media-preview" class="media-preview hidden"></div>
+          </div>
+        </div>
+
         <input id="post-media-input" class="hidden" type="file" accept="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm" />
+
         <div class="composer-row">
           <div class="composer-tools">
-            <label class="media-picker" for="post-media-input" title="Add photo or video" aria-label="Add photo or video">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="m21 15-5-5L5 19"/></svg>
+            <label class="media-picker" for="post-media-input" title="Attach image or video" aria-label="Add photo or video">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span>Media</span>
             </label>
-            <span class="char-count"><span id="char-count-val">0</span>/500</span>
+            <div class="composer-quick-tags" aria-hidden="true">
+              <button type="button" class="tag-chip" data-tag="#thoughts">#thoughts</button>
+              <button type="button" class="tag-chip" data-tag="#tech">#tech</button>
+              <button type="button" class="tag-chip" data-tag="#vibes">#vibes</button>
+            </div>
           </div>
-          <button type="submit" class="btn btn-primary btn-small">Post</button>
+
+          <div class="composer-submit-wrap">
+            <div class="char-count">
+              <span id="char-count-val">0</span><span class="char-max">/500</span>
+            </div>
+            <button type="submit" class="btn btn-primary btn-post">
+              <span>Post</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
         </div>
       </form>
 
+      <!-- Feed list & empty state -->
       <div id="feed-list" class="post-list"></div>
-      <p id="feed-empty" class="empty-state hidden">No posts here yet. Be the first to make a ripple.</p>
+      <div id="feed-empty" class="empty-state hidden">
+        <div class="empty-icon">🌊</div>
+        <h3>No ripples yet</h3>
+        <p>Be the first to share an idea and start the wave.</p>
+      </div>
     </section>
 
-    <!-- Reels view -->
+    <!-- 2. Reels View -->
     <section id="view-reels" class="view reels-view hidden">
-      <header class="col-header">
-        <h2>Reels</h2>
+      <header class="col-header sticky-header">
+        <div class="header-content">
+          <h2>Reels</h2>
+          <span class="badge badge-accent">Trending Clips</span>
+        </div>
       </header>
       <div id="reels-list" class="reels-list"></div>
-      <p id="reels-empty" class="empty-state hidden">No reels yet. Share a video post to add one.</p>
+      <div id="reels-empty" class="empty-state hidden">
+        <div class="empty-icon">🎬</div>
+        <h3>No reels yet</h3>
+        <p>Share a video in the composer above to create the first reel.</p>
+      </div>
     </section>
 
-    <!-- People search view -->
+    <!-- 3. People Search View -->
     <section id="view-search" class="view hidden">
-      <header class="col-header">
-        <h2>Find people</h2>
+      <header class="col-header sticky-header">
+        <div class="header-content">
+          <h2>Find People</h2>
+        </div>
       </header>
+
       <form id="people-search-form" class="people-search-form" role="search">
-        <input id="people-search-input" type="search" name="query" minlength="2" maxlength="80" autocomplete="off" placeholder="Search by name or username" aria-label="Search by name or username" />
+        <div class="search-input-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="people-search-input" type="search" name="query" minlength="2" maxlength="80" autocomplete="off" placeholder="Search by name or @username..." aria-label="Search by name or username" />
+        </div>
         <button type="submit" class="btn btn-primary btn-small">Search</button>
       </form>
-      <p id="people-search-status" class="empty-state">Enter at least 2 characters to search.</p>
+
+      <p id="people-search-status" class="empty-state">Enter at least 2 characters to discover creators.</p>
       <div id="people-search-results" class="people-list"></div>
     </section>
 
-    <!-- Profile view -->
+    <!-- 4. Profile View -->
     <section id="view-profile" class="view hidden">
+      <div class="profile-header-banner" aria-hidden="true"></div>
       <div class="profile-header" id="profile-header"></div>
 
-      <div class="profile-tabs">
-        <button class="profile-tab active" data-ptab="posts">Posts</button>
-        <button class="profile-tab" data-ptab="followers">Followers</button>
-        <button class="profile-tab" data-ptab="following">Following</button>
+      <div class="profile-tabs" role="tablist">
+        <button class="profile-tab active" data-ptab="posts" role="tab">Posts</button>
+        <button class="profile-tab" data-ptab="followers" role="tab">Followers</button>
+        <button class="profile-tab" data-ptab="following" role="tab">Following</button>
       </div>
 
       <div id="profile-posts" class="post-list"></div>
@@ -164,38 +325,57 @@
       <div id="profile-following" class="people-list hidden"></div>
     </section>
 
-    <!-- Post detail view -->
+    <!-- 5. Post Detail View -->
     <section id="view-post" class="view hidden">
-      <button class="btn btn-ghost btn-small back-btn" id="btn-back-to-feed">&larr; Back</button>
+      <header class="col-header sticky-header detail-header">
+        <button class="btn btn-ghost btn-small back-btn" id="btn-back-to-feed">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          <span>Back to Feed</span>
+        </button>
+      </header>
+
       <div id="post-detail-card"></div>
 
       <div class="thread-rail">
-        <h3>Comments</h3>
+        <div class="thread-title-row">
+          <h3>Conversation</h3>
+          <span class="thread-badge">Replies</span>
+        </div>
+
         <form id="form-new-comment" class="composer composer-comment">
           <textarea name="content" maxlength="300" placeholder="Add to the ripple..." rows="2"></textarea>
           <div class="composer-row">
             <span class="char-count"><span id="comment-char-count-val">0</span>/300</span>
-            <button type="submit" class="btn btn-primary btn-small">Reply</button>
+            <button type="submit" class="btn btn-primary btn-small">
+              <span>Reply</span>
+            </button>
           </div>
         </form>
+
         <div id="comment-list" class="comment-list"></div>
       </div>
     </section>
 
-    <!-- Edit profile modal -->
+    <!-- Edit Profile Modal -->
     <div id="modal-edit-profile" class="modal hidden">
       <div class="modal-card">
-        <h3>Edit profile</h3>
+        <div class="modal-header">
+          <h3>Edit profile</h3>
+          <span class="modal-subtitle">Customize how you appear across Ripple</span>
+        </div>
         <form id="form-edit-profile">
-          <label>Display name
-            <input type="text" name="display_name" maxlength="60" />
-          </label>
-          <label>Bio
-            <textarea name="bio" maxlength="280" rows="3"></textarea>
-          </label>
-          <label>Avatar URL
-            <input type="url" name="avatar_url" placeholder="https://..." />
-          </label>
+          <div class="input-group">
+            <label for="edit-display-name">Display name</label>
+            <input id="edit-display-name" type="text" name="display_name" maxlength="60" />
+          </div>
+          <div class="input-group">
+            <label for="edit-bio">Bio</label>
+            <textarea id="edit-bio" name="bio" maxlength="280" rows="3" placeholder="Tell the world a little about yourself..."></textarea>
+          </div>
+          <div class="input-group">
+            <label for="edit-avatar">Avatar URL</label>
+            <input id="edit-avatar" type="url" name="avatar_url" placeholder="https://images.unsplash.com/..." />
+          </div>
           <div class="modal-actions">
             <button type="button" class="btn btn-ghost" id="btn-cancel-edit">Cancel</button>
             <button type="submit" class="btn btn-primary">Save changes</button>
@@ -204,19 +384,26 @@
       </div>
     </div>
 
+    <!-- Change Password Modal -->
     <div id="modal-change-password" class="modal hidden">
       <div class="modal-card">
-        <h3>Change password</h3>
+        <div class="modal-header">
+          <h3>Change password</h3>
+          <span class="modal-subtitle">Protect your account with a secure password</span>
+        </div>
         <form id="form-change-password">
-          <label>Current password
-            <input type="password" name="current_password" required autocomplete="current-password" />
-          </label>
-          <label>New password
-            <input type="password" name="new_password" required minlength="8" autocomplete="new-password" />
-          </label>
-          <label>Confirm new password
-            <input type="password" name="confirm_password" required minlength="8" autocomplete="new-password" />
-          </label>
+          <div class="input-group">
+            <label for="pwd-current">Current password</label>
+            <input id="pwd-current" type="password" name="current_password" required autocomplete="current-password" />
+          </div>
+          <div class="input-group">
+            <label for="pwd-new">New password</label>
+            <input id="pwd-new" type="password" name="new_password" required minlength="8" autocomplete="new-password" />
+          </div>
+          <div class="input-group">
+            <label for="pwd-confirm">Confirm new password</label>
+            <input id="pwd-confirm" type="password" name="confirm_password" required minlength="8" autocomplete="new-password" />
+          </div>
           <p class="form-error" id="password-change-error" role="alert"></p>
           <div class="modal-actions">
             <button type="button" class="btn btn-ghost" id="btn-cancel-password">Cancel</button>
@@ -227,9 +414,72 @@
     </div>
 
   </main>
+
+  <!-- Right Sidebar (Widgets for Desktop) -->
+  <aside class="right-sidebar" aria-label="Secondary widgets">
+    <!-- Quick Search Widget -->
+    <div class="widget-card widget-search">
+      <div class="widget-search-input" id="widget-search-trigger" role="button" tabindex="0" title="Click to search people">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span>Search Ripple...</span>
+        <kbd class="kbd-shortcut">/</kbd>
+      </div>
+    </div>
+
+    <!-- Trending Topics Widget -->
+    <div class="widget-card widget-trends">
+      <div class="widget-header">
+        <h3>Trending Topics</h3>
+        <span class="badge badge-accent">Live</span>
+      </div>
+      <ul class="trend-list">
+        <li class="trend-item" data-tag="#DesignVibes">
+          <span class="trend-category">Design & Art · Trending</span>
+          <span class="trend-tag">#DesignVibes</span>
+          <span class="trend-stat">12.4k ripples</span>
+        </li>
+        <li class="trend-item" data-tag="#WebDev">
+          <span class="trend-category">Technology · Trending</span>
+          <span class="trend-tag">#WebDev</span>
+          <span class="trend-stat">8.9k ripples</span>
+        </li>
+        <li class="trend-item" data-tag="#Creativity">
+          <span class="trend-category">Lifestyle · Trending</span>
+          <span class="trend-tag">#Creativity</span>
+          <span class="trend-stat">6.1k ripples</span>
+        </li>
+        <li class="trend-item" data-tag="#IndieHacker">
+          <span class="trend-category">Startups · Trending</span>
+          <span class="trend-tag">#IndieHacker</span>
+          <span class="trend-stat">4.3k ripples</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Suggested Community Widget -->
+    <div class="widget-card widget-about">
+      <div class="widget-header">
+        <h3>What is Ripple?</h3>
+      </div>
+      <p class="widget-desc">A refined space for authentic thought. Share micro-posts, short videos, and connect with minds across the globe.</p>
+      <div class="widget-features">
+        <div class="feat-pill">⚡ Instant updates</div>
+        <div class="feat-pill">🎬 HD Reels</div>
+        <div class="feat-pill">🛡️ Private & fast</div>
+      </div>
+      <div class="widget-footer-links">
+        <span>© 2026 Ripple Inc.</span>
+        <span>·</span>
+        <a href="#privacy">Privacy</a>
+        <span>·</span>
+        <a href="#terms">Terms</a>
+      </div>
+    </div>
+  </aside>
+
 </div>
 
-<div id="toast" class="toast hidden"></div>
+<div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
 
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>

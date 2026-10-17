@@ -147,6 +147,10 @@ function renderMiniProfile() {
       <div class="mini-handle">@${escapeHtml(state.user.username)}</div>
     </div>
   `;
+  const composerAvatar = el('#composer-avatar-slot');
+  if (composerAvatar) {
+    composerAvatar.innerHTML = avatarHtml(state.user, 'avatar-sm');
+  }
 }
 
 function initNav() {
@@ -166,6 +170,20 @@ function initNav() {
       }
     });
   });
+
+  // Top header feed switcher tabs
+  els('.feed-tab-btn').forEach((tabBtn) => {
+    tabBtn.addEventListener('click', () => {
+      const mode = tabBtn.dataset.feedSwitch || 'all';
+      els('.feed-tab-btn').forEach((b) => b.classList.remove('active'));
+      tabBtn.classList.add('active');
+      els('.nav-link').forEach((b) => {
+        b.classList.toggle('active', b.dataset.route === 'feed' && b.dataset.feed === mode);
+      });
+      navigate('feed', { feed: mode });
+    });
+  });
+
   el('#btn-logout').addEventListener('click', logout);
 }
 
@@ -183,6 +201,9 @@ async function navigate(route, params = {}) {
     state.feedMode = params.feed || 'all';
     showView('feed');
     el('#feed-title').textContent = state.feedMode === 'following' ? 'Following' : 'Home';
+    els('.feed-tab-btn').forEach((b) => {
+      b.classList.toggle('active', b.dataset.feedSwitch === state.feedMode);
+    });
     await loadFeed();
   } else if (route === 'reels') {
     showView('reels');
@@ -426,6 +447,21 @@ function initComposer() {
 
   textarea.addEventListener('input', () => {
     el('#char-count-val').textContent = textarea.value.length;
+  });
+
+  els('.tag-chip').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const tag = chip.dataset.tag;
+      if (!tag) return;
+      const current = textarea.value;
+      if (current.trim().length > 0 && !current.endsWith(' ')) {
+        textarea.value = current + ' ' + tag + ' ';
+      } else {
+        textarea.value = current + tag + ' ';
+      }
+      el('#char-count-val').textContent = textarea.value.length;
+      textarea.focus();
+    });
   });
 
   mediaInput.addEventListener('change', () => {
@@ -871,10 +907,84 @@ function initBackButton() {
   });
 }
 
+function initTheme() {
+  const savedTheme = localStorage.getItem('ripple_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+
+  const toggleButtons = [el('#theme-toggle'), el('#theme-toggle-mobile')].filter(Boolean);
+  toggleButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('ripple_theme', next);
+      toast(next === 'dark' ? 'Dark mode enabled' : 'Light mode enabled');
+    });
+  });
+}
+
+function initDemoAccount() {
+  const demoBtn = el('#btn-quick-demo');
+  if (demoBtn) {
+    demoBtn.addEventListener('click', () => {
+      const form = el('#form-login');
+      if (form) {
+        form.identifier.value = 'aria';
+        form.password.value = 'password123';
+        toast('Demo credentials filled! Logging in...');
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.focus();
+      }
+    });
+  }
+}
+
+function initWidgets() {
+  const searchTrigger = el('#widget-search-trigger');
+  if (searchTrigger) {
+    searchTrigger.addEventListener('click', () => {
+      els('.nav-link').forEach((b) => b.classList.remove('active'));
+      const searchNav = el('.nav-link[data-route="search"]');
+      if (searchNav) searchNav.classList.add('active');
+      navigate('search');
+    });
+  }
+
+  // Quick keyboard shortcut: Press '/' to jump to Search
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)) {
+      e.preventDefault();
+      els('.nav-link').forEach((b) => b.classList.remove('active'));
+      const searchNav = el('.nav-link[data-route="search"]');
+      if (searchNav) searchNav.classList.add('active');
+      navigate('search');
+    }
+  });
+
+  // Trending topic pills
+  els('.trend-item').forEach((item) => {
+    item.addEventListener('click', () => {
+      const tag = item.dataset.tag;
+      els('.nav-link').forEach((b) => b.classList.remove('active'));
+      const searchNav = el('.nav-link[data-route="search"]');
+      if (searchNav) searchNav.classList.add('active');
+      navigate('search');
+      const searchInput = el('#people-search-input');
+      if (searchInput && tag) {
+        searchInput.value = tag.replace('#', '');
+        searchInput.dispatchEvent(new Event('input'));
+      }
+    });
+  });
+}
+
 /* ------------------------------------------------------------
    Boot
    ------------------------------------------------------------ */
 async function boot() {
+  initTheme();
+  initDemoAccount();
+  initWidgets();
   initAuthTabs();
   el('#form-login').addEventListener('submit', handleLogin);
   el('#form-register').addEventListener('submit', handleRegister);

@@ -1,4 +1,5 @@
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 const bcrypt = require('bcryptjs');
 const sequelize = require('./config/db');
 const { User, Post, Comment, Like, Follow } = require('./models');
@@ -9,7 +10,9 @@ async function seed() {
   try {
     await sequelize.authenticate();
     console.log('Connected. Resetting tables...');
-    await sequelize.sync({ force: true }); // WARNING: drops and recreates all tables
+    await sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    await sequelize.sync({ force: true });
+    await sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
 
     const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
 
